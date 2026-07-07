@@ -1,0 +1,61 @@
+[
+  {
+    "id": "smart-parking-tab",
+    "type": "tab",
+    "label": "Smart Parking System",
+    "disabled": false,
+    "info": "Receives IBM IoT slot events and forwards them to the local parking API."
+  },
+  {
+    "id": "ibm-iot-input",
+    "type": "ibmiot in",
+    "z": "smart-parking-tab",
+    "authentication": "boundService",
+    "apiKey": "",
+    "inputType": "evt",
+    "deviceId": "+",
+    "applicationId": "",
+    "deviceType": "+",
+    "eventType": "slot-status",
+    "commandType": "",
+    "format": "json",
+    "name": "IBM IoT slot events",
+    "x": 160,
+    "y": 120,
+    "wires": [["prepare-request"]]
+  },
+  {
+    "id": "prepare-request",
+    "type": "function",
+    "z": "smart-parking-tab",
+    "name": "Prepare local API request",
+    "func": "msg.headers = {'Content-Type':'application/json'};\nmsg.url = 'http://127.0.0.1:8000/api/sensor-event';\nmsg.method = 'POST';\nreturn msg;",
+    "outputs": 1,
+    "x": 420,
+    "y": 120,
+    "wires": [["send-to-api"]]
+  },
+  {
+    "id": "send-to-api",
+    "type": "http request",
+    "z": "smart-parking-tab",
+    "name": "Update dashboard",
+    "method": "use",
+    "ret": "obj",
+    "url": "",
+    "x": 670,
+    "y": 120,
+    "wires": [["debug-output"]]
+  },
+  {
+    "id": "debug-output",
+    "type": "debug",
+    "z": "smart-parking-tab",
+    "name": "API response",
+    "active": true,
+    "complete": "payload",
+    "x": 880,
+    "y": 120,
+    "wires": []
+  }
+]
